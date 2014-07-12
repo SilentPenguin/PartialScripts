@@ -35,6 +35,13 @@ Similarly, if you include a bundle with it's virtual path, it will then render t
 
 Should you wish to disable this, you can call renderScripts as:
 
-    @Html.RenderScripts(useScripts: false)
+    @Html.RenderScripts(useBundles: false)
 
 and the system will ignore any bundling, passing the virual path directly into Content Mapping.
+
+Quirks
+======
+
+You can put RenderScripts where ever you prefer, but it's best to put it at the bottom of your _layout.cshtml rather than the header.
+
+The reason for this is simple, if your layout includes any partials which contain scripts, RenderScripts can't backlook for references, and any scripts added after you call RenderScripts will fall into a black hole, unless you call it again.
