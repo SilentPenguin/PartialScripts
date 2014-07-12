@@ -1,3 +1,8 @@
+/*
+ * Obligatory warning:
+ * Software provided as is, free and open, with no warrenty or assurances.
+ */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
