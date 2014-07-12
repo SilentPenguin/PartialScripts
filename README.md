@@ -3,6 +3,12 @@ PartialScripts
 
 Manages scripts for partial views and layouts.
 
+With this script you don't need to reference your bundles inside your views at all, but you can if you wish.
+Instead you simply say which of your scripts you require in a given view or partial, and then your configured bundles and extra files can be rendered on your layout.
+
+Note: This isn't a replacement for bundling, you will still need to tell the bundling system which files you wish to include
+and provide names to the bundles.
+
 Usage
 =====
 
