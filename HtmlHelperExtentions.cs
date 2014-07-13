@@ -1,6 +1,7 @@
 /*
  * Obligatory warning:
  * Software provided as is, free and open, with no warrenty or assurances.
+ * Do with this code what you will. Say thank you, but do not blame me for it.
  */
 
 using System;
