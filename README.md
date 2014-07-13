@@ -1,7 +1,7 @@
 PartialScripts
 ==============
 
-Manages scripts for partial views and layouts.
+Manages scripts for **asp.net mvc** partial views and layouts.
 
 With this script you don't need to reference your bundles inside your views at all, but you can if you wish.
 Instead you simply say which of your scripts you require in a given view or partial, and then your configured bundles and extra files can be rendered on your layout.
