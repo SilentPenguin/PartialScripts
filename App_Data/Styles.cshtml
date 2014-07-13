@@ -1,0 +1,24 @@
+@helper Include(String VirtualPath)
+{
+    System.Web.Mvc.HtmlHelperExtentions.StyleFile(HttpContext.Current.Items, VirtualPath);
+}
+
+@helper RenderAll(Boolean useBundles = true)
+{
+    @System.Web.Mvc.HtmlHelperExtentions.RenderStyles(HttpContext.Current.Items, useBundles);
+}
+
+@helper RenderFormat(String Format, params String[] Paths)
+{
+    @System.Web.Optimization.Styles.RenderFormat(Format, Paths);
+}
+
+@helper Render(params String[] Paths)
+{
+    @System.Web.Optimization.Styles.Render(Paths);
+}
+
+@helper Url(String VirtualPath)
+{
+    @System.Web.Optimization.Styles.Url(VirtualPath);
+}
