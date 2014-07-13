@@ -1,0 +1,9 @@
+@helper Include(String VirtualPath)
+{
+    System.Web.Mvc.HtmlHelperExtentions.ScriptFile(HttpContext.Current.Items, VirtualPath);
+}
+
+@helper RenderAll(Boolean useBundles = true)
+{
+    @System.Web.Mvc.HtmlHelperExtentions.RenderScripts(HttpContext.Current.Items, useBundles);
+}
