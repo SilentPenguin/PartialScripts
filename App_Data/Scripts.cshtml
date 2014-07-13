@@ -7,3 +7,18 @@
 {
     @System.Web.Mvc.HtmlHelperExtentions.RenderScripts(HttpContext.Current.Items, useBundles);
 }
+
+@helper RenderFormat(String Format, params String[] Paths)
+{
+    @System.Web.Optimization.Scripts.RenderFormat(Format, Paths);
+}
+
+@helper Render(params String[] Paths)
+{
+    @System.Web.Optimization.Scripts.Render(Paths);
+}
+
+@helper Url(String VirtualPath)
+{
+    @System.Web.Optimization.Scripts.Url(VirtualPath);
+}
