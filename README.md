@@ -14,14 +14,11 @@ Usage
 
 Usage is simple, inside any view or partial, reference your scripts.
 
-    @{
-       Html.ScriptFile("~/Scripts/YourFileHere.js");
-    }
-
+    @Scripts.Include("~/Scripts/YourFileHere.js");
 
 Then inside your layout, make a call to RenderScripts:
 
-    @Html.RenderScripts()
+    @Scripts.RenderAll()
 
 and it'll render all the ScriptFile references in the location of RenderScripts()
 
@@ -35,7 +32,7 @@ Similarly, if you include a bundle with it's virtual path, it will then render t
 
 Should you wish to disable this, you can call renderScripts as:
 
-    @Html.RenderScripts(useBundles: false)
+    @Scripts.RenderAll(useBundles: false)
 
 and the system will ignore any bundling, passing the virual path directly into Content Mapping.
 
