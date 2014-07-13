@@ -63,6 +63,8 @@ The partials "Top" and "Bottom" are rendered during your _layout.cshtml's execut
 
 There is a simple solution to this, always include your scripts before the Script.RenderAll call.
 
+In Practice, this means you must do one of two things. Either include all scripts from partials found in _Layout.cshtml in the head, before calling Scripts.RenderAll or Call Scripts.RenderAll at the bottom of the body, after all the views have had a chance to render.
+
 RenderAll will handle multiple calls correctly though, so you can put one call at the top, and one at the bottom of your layout. Scripts added inside your _Layout.cshtml body will then be called. 
 
 Bonuses
