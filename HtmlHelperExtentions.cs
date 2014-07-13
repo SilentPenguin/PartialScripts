@@ -19,39 +19,65 @@ namespace System.Web.Mvc
 {
     public static class HtmlHelperExtentions
     {
+        private enum BundleType
+        {
+            Script,
+            Style,
+        }
+
         public const String ScriptsKey = "ScriptFiles";
-        public const String AddedScriptsKey = "AddedScript";
+        public const String StylesKey = "StyleFiles";
+        public const String AddedScriptsKey = "AddedScripts";
+        public const String AddedStylesKey = "AddedStyles";
 
         public static void ScriptFile(this HtmlHelper htmlHelper, String path)
         {
-            ScriptFile(htmlHelper.ViewContext.HttpContext.Items, path);
+            BundleFile(htmlHelper.ViewContext.HttpContext.Items, path, BundleType.Script);
         }
 
-        public static void ScriptFile(IDictionary Items, String path)
+        public static void StyleFile(this HtmlHelper htmlHelper, String path)
         {
-            Stack<ScriptFile> scripts = Items[ScriptsKey] as Stack<ScriptFile>;
-            Stack<String> addedscripts = Items[AddedScriptsKey] as Stack<String>;
-            if (scripts == null)
+            BundleFile(htmlHelper.ViewContext.HttpContext.Items, path, BundleType.Style);
+        }
+
+        public static void ScriptFile(IDictionary items, String path)
+        {
+            BundleFile(items, path, BundleType.Script);
+        }
+
+        public static void StyleFile(IDictionary items, String path)
+        {
+            BundleFile(items, path, BundleType.Style);
+        }
+
+        private static void BundleFile(IDictionary Items, String path, BundleType type)
+        {
+            String key = type == BundleType.Script ? ScriptsKey : StylesKey;
+            String addedKey = type == BundleType.Script ? AddedScriptsKey : AddedStylesKey;
+            Stack<DeferredBundleFile> files = Items[key] as Stack<DeferredBundleFile>;
+            Stack<String> addedfiles = Items[addedKey] as Stack<String>;
+            if (files == null)
             {
-                scripts = new Stack<ScriptFile>();
-                addedscripts = new Stack<String>();
-                Items[ScriptsKey] = scripts;
-                Items[AddedScriptsKey] = addedscripts;
+                files = new Stack<DeferredBundleFile>();
+                addedfiles = new Stack<String>();
+                Items[key] = files;
+                Items[addedKey] = addedfiles;
             }
 
-            if (!addedscripts.Contains(path)){
-                addedscripts.Push(path);
+            if (!addedfiles.Contains(path))
+            {
+                addedfiles.Push(path);
                 if (path.Contains('*') || path.Contains('{'))
                 {
                     IEnumerable<String> paths = Files(path);
                     foreach (String file in paths)
                     {
-                        scripts.Push(new ScriptFile(file));
+                        files.Push(new DeferredBundleFile(file));
                     }
                 }
                 else
                 {
-                    scripts.Push(new ScriptFile(path));
+                    files.Push(new DeferredBundleFile(path));
                 }
             }
         }
@@ -76,22 +102,39 @@ namespace System.Web.Mvc
                 .Where(file => regex.IsMatch("~" + file.VirtualPath))
                 .Select(file => "~" + file.VirtualPath);
         }
+
         public static IHtmlString RenderScripts(this HtmlHelper htmlHelper, Boolean useBundles = true)
         {
-            return RenderScripts(htmlHelper.ViewContext.HttpContext.Items, useBundles);
+            return RenderFiles(htmlHelper.ViewContext.HttpContext.Items, BundleType.Script, useBundles);
         }
 
-        public static IHtmlString RenderScripts(IDictionary Items, Boolean useBundles = true)
+        public static IHtmlString RenderStyles(this HtmlHelper htmlHelper, Boolean useBundles = true)
         {
-            Stack<ScriptFile> scripts = Items[ScriptsKey] as Stack<ScriptFile>;
-            if (scripts != null)
+            return RenderFiles(htmlHelper.ViewContext.HttpContext.Items, BundleType.Style, useBundles);
+        }
+
+        public static IHtmlString RenderScripts(IDictionary items, Boolean useBundles = true)
+        {
+            return RenderFiles(items, BundleType.Script, useBundles);
+        }
+
+        public static IHtmlString RenderStyles(IDictionary items, Boolean useBundles = true)
+        {
+            return RenderFiles(items, BundleType.Style, useBundles);
+        }
+
+        private static IHtmlString RenderFiles(IDictionary Items, BundleType type, Boolean useBundles = true)
+        {
+            String key = type == BundleType.Script ? ScriptsKey : StylesKey;
+            Stack<DeferredBundleFile> files = Items[key] as Stack<DeferredBundleFile>;
+            if (files != null)
             {
                 StringBuilder builder = new StringBuilder();
-                Int32 count = scripts.Count();
+                Int32 count = files.Count();
 
                 if (useBundles)
                 {
-                    IEnumerable<String> notBundles = scripts.Where(script => !script.IsBundle).Select(file => file.Path);
+                    IEnumerable<String> notBundles = files.Where(file => !file.IsBundle).Select(file => file.Path);
                     BundleCollection bundles = BundleTable.Bundles;
                     foreach (Bundle bundle in bundles)
                     {
@@ -99,21 +142,24 @@ namespace System.Web.Mvc
 
                         if (bundleFiles.Intersect(notBundles).Count() == bundleFiles.Count())
                         {
-                            builder.AppendLine(Scripts.Render(bundle.Path).ToString());
-                            foreach(ScriptFile script in scripts.Where(script => bundleFiles.Any(file => file == script.Path)))
+                            IHtmlString render = type == BundleType.Script ? Scripts.Render(bundle.Path) : Styles.Render(bundle.Path);
+                            builder.AppendLine(render.ToString());
+                            foreach(DeferredBundleFile file in files.Where(script => bundleFiles.Any(file => file == script.Path)))
                             {
-                                script.Rendered = true;
+                                file.Rendered = true;
                             }
                         }
                     }
                 }
 
-                if (scripts.Any(script => !script.Rendered))
+                if (files.Any(script => !script.Rendered))
                 {
-                    builder.AppendLine(Scripts.Render(scripts.Where(script => !script.Rendered).Select(script => script.Path).ToArray()).ToString());
+                    String[] renderfiles = files.Where(file => !file.Rendered).Select(file => file.Path).ToArray();
+                    IHtmlString render = type == BundleType.Script ? Scripts.Render(renderfiles) : Styles.Render(renderfiles);
+                    builder.AppendLine(render.ToString());
                 }
 
-                scripts.Clear();
+                files.Clear();
 
                 return new MvcHtmlString(builder.ToString());
             }
@@ -122,11 +168,11 @@ namespace System.Web.Mvc
         }
     }
 
-    public class ScriptFile {
+    public class DeferredBundleFile {
         public String Path { get; set; }
         public Boolean Rendered { get; set; }
         public Boolean IsBundle { get; set; }
-        public ScriptFile (String path)
+        public DeferredBundleFile (String path)
         {
             Path = path;
             IsBundle = BundleResolver.Current.IsBundleVirtualPath(path);
