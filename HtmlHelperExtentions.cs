@@ -4,6 +4,7 @@
  */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,25 +13,34 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Hosting;
-using System.Web.Mvc;
 using System.Web.Optimization;
 
 namespace System.Web.Mvc
 {
     public static class HtmlHelperExtentions
     {
-        public const String ScriptsKey = "ScriptContexts";
+        public const String ScriptsKey = "ScriptFiles";
+        public const String AddedScriptsKey = "AddedScript";
 
         public static void ScriptFile(this HtmlHelper htmlHelper, String path)
         {
-            Stack<ScriptFile> scripts = htmlHelper.ViewContext.HttpContext.Items[ScriptsKey] as Stack<ScriptFile>;
+            ScriptFile(htmlHelper.ViewContext.HttpContext.Items, path);
+        }
+
+        public static void ScriptFile(IDictionary Items, String path)
+        {
+            Stack<ScriptFile> scripts = Items[ScriptsKey] as Stack<ScriptFile>;
+            Stack<String> addedscripts = Items[AddedScriptsKey] as Stack<String>;
             if (scripts == null)
             {
                 scripts = new Stack<ScriptFile>();
-                htmlHelper.ViewContext.HttpContext.Items[ScriptsKey] = scripts;
+                addedscripts = new Stack<String>();
+                Items[ScriptsKey] = scripts;
+                Items[AddedScriptsKey] = addedscripts;
             }
 
-            if (!scripts.Any(row => row.Path == path)){
+            if (!addedscripts.Contains(path)){
+                addedscripts.Push(path);
                 if (path.Contains('*') || path.Contains('{'))
                 {
                     IEnumerable<String> paths = Files(path);
@@ -51,7 +61,7 @@ namespace System.Web.Mvc
         static String WildCardToken = Regex.Escape("*");
         static String WildCardRegEx = @".*";
 
-        private static IEnumerable<String> Files(String path)
+        internal static IEnumerable<String> Files(String path)
         {
             String directoryPath = Path.GetDirectoryName(path);
             String fileName = Path.GetFileName(path);
@@ -66,11 +76,14 @@ namespace System.Web.Mvc
                 .Where(file => regex.IsMatch("~" + file.VirtualPath))
                 .Select(file => "~" + file.VirtualPath);
         }
-
         public static IHtmlString RenderScripts(this HtmlHelper htmlHelper, Boolean useBundles = true)
         {
-            Stack<ScriptFile> scripts = htmlHelper.ViewContext.HttpContext.Items[ScriptsKey] as Stack<ScriptFile>;
-            IEnumerable<String> notBundles = scripts.Where(script => !script.IsBundle).Select(file => file.Path);
+            return RenderScripts(htmlHelper.ViewContext.HttpContext.Items, useBundles);
+        }
+
+        public static IHtmlString RenderScripts(IDictionary Items, Boolean useBundles = true)
+        {
+            Stack<ScriptFile> scripts = Items[ScriptsKey] as Stack<ScriptFile>;
             if (scripts != null)
             {
                 StringBuilder builder = new StringBuilder();
@@ -78,6 +91,7 @@ namespace System.Web.Mvc
 
                 if (useBundles)
                 {
+                    IEnumerable<String> notBundles = scripts.Where(script => !script.IsBundle).Select(file => file.Path);
                     BundleCollection bundles = BundleTable.Bundles;
                     foreach (Bundle bundle in bundles)
                     {
@@ -98,6 +112,8 @@ namespace System.Web.Mvc
                 {
                     builder.AppendLine(Scripts.Render(scripts.Where(script => !script.Rendered).Select(script => script.Path).ToArray()).ToString());
                 }
+
+                scripts.Clear();
 
                 return new MvcHtmlString(builder.ToString());
             }
