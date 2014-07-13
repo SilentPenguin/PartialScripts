@@ -1,13 +1,13 @@
 PartialScripts
 ==============
 
-Manages scripts for **asp.net mvc** partial views and layouts.
+Manages scripts and stylesheets for **asp.net mvc** partial views and layouts.
 
-With this script you don't need to reference your bundles inside your views at all, but you can if you wish. Instead you simply say which of your scripts you require in a given view or partial, and then your configured bundles and extra files can be rendered on your layout.
+With this script you don't need to reference your bundles inside your views, but you can if you wish. Instead you simply state which of your scripts you require with a given view or partial, and then your configured bundles and extra files can be rendered on your layout.
 
-Note: This isn't a replacement for bundling, you will still need to tell the bundling system which files you wish to include and provide names to the bundles.
+Note: This isn't a replacement for bundling, although it may well be in the future. Currently, when using bundling, you will still need to tell the bundling system which files you wish to include and provide names to the bundles.
 
-Adding the code to your project is simple, put the HtmlHelperExtentions somewhere in your project (anywhere sensible), and combine the contents of App_Code with your own project's App_Code
+Adding the code to a default MVC5 project is relatively simple, put the HtmlHelperExtentions somewhere in your project (anywhere sensible), and combine the contents of App_Code with your own project's App_Code
 
 Usage
 =====
@@ -16,15 +16,20 @@ Usage is simple, inside any view or partial, reference your scripts:
 
     @Scripts.Include("~/Scripts/YourFileHere.js");
     
-Similar to bundling, the system also supports version and wildcard style syntax:
+Similarly, for stylesheets:
+
+    @Styles.Include("~/Scripts/YourFileHere.js");
+    
+As with bundling, the system supports version and wildcard style syntax like so:
     
     @Scripts.Include("~/Scripts/jquery-{version}.js");
 
-Then inside your layout, make a call to RenderScripts:
+Then inside your layout:
 
+    @Styles.RenderAll()
     @Scripts.RenderAll()
 
-and it'll render tags for all previously included scripts in the location of your @Scripts.RenderAll()
+and it'll render tags for all previously included scripts in the location of your RenderAll calls.
 
 Quirks
 ======
@@ -41,12 +46,13 @@ Razor Execution Order
 Take the simple example _Layout.cshtml below:
 
     <head>
-        @Styles.Render("~/Content/site.css")
+        @Styles.Include("~/Content/Stylesheets/site.css")
 
         @Scripts.Include("~/Scripts/jquery-{version}.js")
         @Scripts.Include("~/Scripts/jquery.signalR-{version}.js");
         @Scripts.Include("~/Scripts/Handlebars.min.js");
 
+        @Styles.RenderAll()
         @Scripts.RenderAll()
     </head>
     <body>
@@ -70,11 +76,11 @@ RenderAll will handle multiple calls correctly though, so you can put one call a
 Bonuses
 =======
 
-Don't like bundling? By default, the rendering looks at your bundle collection to identify which bundles you have included in the page, and it will choose to render a bundle if you have included all the scripts in a bundle.
+Don't like bundling? By default, the rendering looks at your bundle collection to identify which bundles you have included in the page, and it will choose to render a bundle if you have included all the files in a bundle.
 
 Similarly, if you include a bundle with it's virtual path, it will then render that instead using the bundling.
 
-Should you wish to disable this, you can call renderScripts as:
+Should you wish to disable this, you can call Scripts.RenderAll as:
 
     @Scripts.RenderAll(useBundles: false)
 
