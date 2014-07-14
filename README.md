@@ -5,7 +5,7 @@ Manages scripts and stylesheets for **asp.net mvc** partial views and layouts.
 
 With this script you don't need to reference your bundles inside your views, but you can if you wish. Instead you simply state which of your scripts you require with a given view or partial, and then your configured bundles and extra files can be rendered on your layout.
 
-**Note:** This isn't a replacement for bundling, although it may well be in the future. Currently, when using bundling, you will still need to tell the bundling system which files you wish to include and provide names to the bundles.
+**Note:** This isn't a replacement for bundling, although it may well be in the future. Currently, when using bundling, you will still need to tell the bundling system which files you wish to include and provide names to the bundles. In the future, the system will probably set itself to build bundles if the bundle table is empty.
 
 Adding the code to a default MVC5 project is relatively simple, put the **HtmlHelperExtentions.cs** somewhere in your project (anywhere sensible), and combine the contents of **App_Code** with your own project's **App_Code**
 
