@@ -143,6 +143,10 @@ namespace System.Web.Mvc
 
                         if (bundleFiles.Intersect(notBundles).Count() == bundleFiles.Count())
                         {
+                            if (!BundleTable.EnableOptimizations)
+                            {
+                                builder.AppendLine("<!-- Bundle: " + bundle.Path + " -->");
+                            }
                             IHtmlString render = type == BundleType.Script ? Scripts.Render(bundle.Path) : Styles.Render(bundle.Path);
                             builder.AppendLine(render.ToString());
                             foreach(DeferredBundleFile file in files.Where(script => bundleFiles.Any(file => file == script.Path)))
@@ -155,6 +159,10 @@ namespace System.Web.Mvc
 
                 if (files.Any(script => !script.Rendered))
                 {
+                    if (!BundleTable.EnableOptimizations)
+                    {
+                        builder.AppendLine("<!-- Extra Files -->");
+                    }
                     String[] renderfiles = files.Where(file => !file.Rendered).Select(file => file.Path).ToArray();
                     IHtmlString render = type == BundleType.Script ? Scripts.Render(renderfiles) : Styles.Render(renderfiles);
                     builder.AppendLine(render.ToString());
