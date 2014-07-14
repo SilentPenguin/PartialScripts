@@ -7,7 +7,7 @@ With this script you don't need to reference your bundles inside your views, but
 
 ***Note:*** This isn't a replacement for bundling, although it may well be in the future. Currently, when using bundling, you will still need to tell the bundling system which files you wish to include and provide names to the bundles.
 
-Adding the code to a default MVC5 project is relatively simple, put the ```HtmlHelperExtentions``` _somewhere_ in your project (anywhere sensible), and combine the contents of ***App_Code*** with your ***own*** project's ***App_Code***
+Adding the code to a default MVC5 project is relatively simple, put the ```HtmlHelperExtentions.cs``` somewhere in your project (anywhere sensible), and combine the contents of the ***App_Code*** directory with your own project's ***App_Code***
 
 Usage
 =====
@@ -46,7 +46,7 @@ I've collected a few of the quirks i've found while using this module. There's o
 
 Limitations
 ----------
-A simple limitation of Razor's helpers means that you must make calls to Scripts.Include using the ```@``` style syntax rather than ```@{}```.Helpers found within a ```@{ }``` tag will **not be hit.***
+A simple limitation of Razor's helpers means that you must make calls to Scripts.Include using the ```@``` style syntax rather than ```@{ }```. Helpers found within a ```@{ }``` tag will ***not be hit***.
 
 Razor Execution Order
 ---------------------
