@@ -159,7 +159,7 @@ namespace System.Web.Mvc
 
                 if (files.Any(script => !script.Rendered))
                 {
-                    if (!BundleTable.EnableOptimizations)
+                    if (useBundles && !BundleTable.EnableOptimizations)
                     {
                         builder.AppendLine("<!-- Extra Files -->");
                     }
