@@ -7,7 +7,7 @@ With this script you don't need to reference your bundles inside your views, but
 
 ***Note:*** This isn't a replacement for bundling, although it may well be in the future. Currently, when using bundling, you will still need to tell the bundling system which files you wish to include and provide names to the bundles.
 
-Adding the code to a default MVC5 project is relatively simple, put the ```HtmlHelperExtentions.cs``` somewhere in your project (anywhere sensible), and combine the contents of the ***App_Code*** directory with your own project's ***App_Code***
+Adding the code to a default MVC5 project is relatively simple, put the `HtmlHelperExtentions.cs` somewhere in your project (anywhere sensible), and combine the contents of the ***App_Code*** directory with your own project's ***App_Code***
 
 Usage
 =====
@@ -37,7 +37,7 @@ Then inside your ***_Layout.cshtml***:
 @Scripts.RenderAll()
 ```
 
-and it'll render tags for all previously included scripts in the location of your ```RenderAll()``` calls.
+and it'll render tags for all previously included scripts in the location of your `RenderAll()` calls.
 
 Quirks
 ======
@@ -46,7 +46,7 @@ I've collected a few of the quirks i've found while using this module. There's o
 
 Limitations
 ----------
-A simple limitation of Razor's helpers means that you must make calls to Scripts.Include using the ```@``` style syntax rather than ```@{ }```. Helpers found within a ```@{ }``` tag will ***not be hit***.
+A simple limitation of Razor's helpers means that you must make calls to `Scripts.Include()` using the `@` style syntax rather than `@{ }`. Helpers found within a `@{ }` tag will ***not be hit***.
 
 Razor Execution Order
 ---------------------
@@ -73,15 +73,15 @@ Take the simple example ***_Layout.cshtml*** below:
 </body>
 ```
 
-The Body of your page is rendered prior to your ***_Layout.cshtml*** and later inserted into the page at ```RenderBody()```. meaning any ```Scripts.Include()``` calls will be hit before your ```Script.RenderAll()``` calls.
+The Body of your page is rendered prior to your ***_Layout.cshtml*** and later inserted into the page at `RenderBody()`. meaning any `Scripts.Include()` calls will be hit before your `Script.RenderAll()` calls.
 
-The partials ***Top*** and ***Bottom*** are rendered during your ***_Layout.cshtml***'s executing, meaning any ```Scripts.Include()``` calls will be hit after the ```Script.RenderAll()``` call is hit. 
+The partials ***Top*** and ***Bottom*** are rendered during your ***_Layout.cshtml***'s executing, meaning any `Scripts.Include()` calls will be hit after the `Script.RenderAll()` call is hit. 
 
 There is a simple solution to this, always include your scripts before the ```Script.RenderAll()``` call.
 
-In Practice, this means you must do one of two things. Either include all scripts from partials found in ***_Layout.cshtml*** in the head, before calling ```Scripts.RenderAll()``` or Call ```Scripts.RenderAll()``` at the bottom of the body, after all the views have had a chance to render.
+In Practice, this means you must do one of two things. Either include all scripts from partials found in ***_Layout.cshtml*** in the head, before calling `Scripts.RenderAll()` or Call `Scripts.RenderAll()` at the bottom of the body, after all the views have had a chance to render.
 
-```RenderAll()``` will handle multiple calls correctly though, so you can put one call at the top, and one at the bottom of your layout. Scripts added inside your ***_Layout.cshtml*** body will then be called. 
+`Scripts.RenderAll()` will handle multiple calls correctly though, so you can put one call at the top, and one at the bottom of your layout. Scripts added inside your ***_Layout.cshtml*** body will then be called. 
 
 Don't like bundling?
 =======
@@ -90,7 +90,7 @@ By default, the rendering looks at your bundle collection to identify which bund
 
 Similarly, if you include a bundle with it's virtual path, it will then render that instead using the bundling.
 
-Should you wish to disable this, you can call ```Scripts.RenderAll()``` as:
+Should you wish to disable this, you can call `Scripts.RenderAll()` as:
 
 ```csharp
 @Scripts.RenderAll(useBundles: false)
