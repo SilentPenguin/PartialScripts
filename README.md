@@ -38,7 +38,7 @@ I've collected a few of the quirks i've found while using this module. There's o
 
 Outputting
 ----------
-A simple limitation of Razor's helpers means that you must make calls to `Scripts.Include` using the `@` style syntax rather than `@{}.` Helpers found within a `@{ }` tag will not be hit.
+A simple limitation of Razor's helpers means that you must make calls to `Scripts.Include` using the `@` style syntax rather than `@{ }`. Helpers found within a `@{ }` tag will not be hit.
 
 Razor Execution Order
 ---------------------
