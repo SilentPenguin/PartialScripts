@@ -58,8 +58,8 @@ Take the simple example ***_Layout.cshtml*** below:
     @Styles.Include("~/Content/Stylesheets/site.css")
 
     @Scripts.Include("~/Scripts/jquery-{version}.js")
-    @Scripts.Include("~/Scripts/jquery.signalR-{version}.js");
-    @Scripts.Include("~/Scripts/Handlebars.min.js");
+    @Scripts.Include("~/Scripts/jquery.signalR-{version}.js")
+    @Scripts.Include("~/Scripts/Handlebars.min.js")
 
     @Styles.RenderAll()
     @Scripts.RenderAll()
