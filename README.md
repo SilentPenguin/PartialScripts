@@ -18,7 +18,7 @@ Usage is simple, inside any view or partial, reference your scripts:
     
 Similarly, for stylesheets:
 
-    @Styles.Include("~/Scripts/YourFileHere.js");
+    @Styles.Include("~/Content/Stylesheets/YourFileHere.css");
     
 As with bundling, the system supports version and wildcard style syntax like so:
     
