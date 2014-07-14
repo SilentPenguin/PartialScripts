@@ -81,10 +81,18 @@ There is a simple solution to this, always include your scripts before the ```Sc
 
 In Practice, this means you must do one of two things. Either include all scripts from partials found in ***_Layout.cshtml*** in the head, before calling `Scripts.RenderAll()` or Call `Scripts.RenderAll()` at the bottom of the body, after all the views have had a chance to render.
 
-`Scripts.RenderAll()` will handle multiple calls correctly though, so you can put one call at the top, and one at the bottom of your layout. Scripts added inside your ***_Layout.cshtml*** body will then be called. 
+`Scripts.RenderAll()` will handle multiple calls correctly though, so you can put one call at the top, and one at the bottom of your layout. Scripts added inside your ***_Layout.cshtml*** body will then be called.
+
+Extras
+======
+
+Debugging Bundle Matching
+-------------------------
+
+While `BundleTable.EnableOptimizations` is false and `useBundling` is true (See below), html comments will be inserted into the rendered page indicating what has been rendered. One comment will be inserted for each matched bundle, with the name of the bundle. while a comment will be inserted at the bottem, before any remaining files are rendered.
 
 Don't like bundling?
-=======
+--------------------
 
 By default, the rendering looks at your bundle collection to identify which bundles you have included in the page, and it will choose to render a bundle if you have included all the files in a bundle.
 
