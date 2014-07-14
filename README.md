@@ -15,19 +15,19 @@ Usage
 Usage is simple, inside any view or partial, reference your scripts:
 
 ```csharp
-@Scripts.Include("~/Scripts/YourFileHere.js");
+@Scripts.Include("~/Scripts/YourFileHere.js")
 ```
     
 Similarly, for stylesheets:
 
 ```csharp
-@Styles.Include("~/Content/Stylesheets/YourFileHere.css");
+@Styles.Include("~/Content/Stylesheets/YourFileHere.css")
 ```
     
 As with bundling, the system supports version and wildcard style syntax like so:
 
 ```csharp    
-@Scripts.Include("~/Scripts/jquery-{version}.js");
+@Scripts.Include("~/Scripts/jquery-{version}.js")
 ```
 
 Then inside your ***_Layout.cshtml***:
