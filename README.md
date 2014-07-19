@@ -39,13 +39,13 @@ Then inside your ***_Layout.cshtml***:
 
 and it'll render tags for all previously included scripts in the location of your `RenderAll()` calls.
 
-Quirks
+Quirks and Limitations
 ======
 
 I've collected a few of the quirks i've found while using this module. There's only a couple, and they aren't particularly unpredictable or unexpected.
 
-Limitations
-----------
+Razor Helpers
+-------------
 A simple limitation of Razor's helpers means that you must make calls to `Scripts.Include()` using the `@` style syntax rather than `@{ }`. Helpers found within a `@{ }` tag will ***not be hit***.
 
 Razor Execution Order
