@@ -1,7 +1,10 @@
 /*
+ * Authored: SilentPenguin
+ * 
  * Obligatory warning:
- * Software provided as is, free and open, with no warrenty or assurances.
+ * Software provided as is, free and open, with no warrenty or assurances, you're on your own.
  * Do with this code what you will. Say thank you, but do not blame me for it.
+ * Please republish any changes you make.
  */
 
 using System;
